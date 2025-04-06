@@ -27,6 +27,7 @@ services:
             interval: 5s
     langgraph-api:
         image: "teddylee777/langgraph-qna-agent:latest"
+        platform: linux/arm64
         ports:
             - "7777:8000"
         depends_on:
