@@ -85,6 +85,92 @@ docker compose up -d
 docker compose down
 ```
 
+## FastAPI 헬스 체크 서버
+
+FastAPI로 구현된 간단한 헬스 체크 서버입니다. `/health` 엔드포인트에 접속하면 200 상태 코드와 함께 건강 상태 정보를 반환합니다.
+
+### 사전 요구사항
+
+- Python 3.10 이상
+- uv 패키지 매니저 (설치되어 있지 않은 경우 setup.sh 스크립트가 자동으로 설치합니다)
+
+### 설치 방법
+
+1. setup.sh 스크립트에 실행 권한을 부여합니다:
+
+```bash
+chmod +x setup.sh
+```
+
+2. setup.sh 스크립트를 실행하여 가상환경을 생성하고 필요한 패키지를 설치합니다:
+
+```bash
+./setup.sh
+```
+
+이 스크립트는 다음 작업을 자동으로 수행합니다:
+- uv 패키지 매니저가 설치되어 있지 않다면 설치
+- `.venv` 가상환경 생성
+- 필요한 의존성 패키지(FastAPI, Uvicorn 등) 설치
+
+### 서버 실행 방법
+
+1. start.sh 스크립트에 실행 권한을 부여합니다:
+
+```bash
+chmod +x start.sh
+```
+
+2. 이미 Docker 서비스가 7777 포트를 사용 중이라면 먼저 중지합니다:
+
+```bash
+docker compose down
+```
+
+3. 헬스 체크 서버를 실행합니다:
+
+```bash
+./start.sh
+```
+
+서버는 7777 포트에서 실행됩니다.
+
+### API 엔드포인트
+
+- `GET /health`: 200 OK 상태 코드와 함께 JSON 형식의 건강 상태 정보를 반환합니다
+- `GET /`: /health 엔드포인트와 동일한 200 OK 응답을 반환합니다 (루트 경로 접속 시)
+- `GET /docs`: Swagger UI 문서 (FastAPI에서 자동으로 제공)
+
+### 헬스 체크 테스트 방법
+
+서버가 실행되면 다음 명령어로 헬스 체크 엔드포인트를 테스트할 수 있습니다:
+
+```bash
+curl -i http://localhost:7777/health
+```
+
+예상 응답:
+
+```
+HTTP/1.1 200 OK
+content-length: 58
+content-type: application/json
+date: Mon, 01 Jan 2024 00:00:00 GMT
+server: uvicorn
+
+{"status":"healthy","service":"health-check-server"}
+```
+
+## 트러블슈팅
+
+만약 서버 실행 시 "address already in use" 오류가 발생한다면, 다음 명령어로 Docker 서비스를 중지한 후 다시 시도해보세요:
+
+```bash
+docker compose down
+```
+
+이렇게 하면 7777 포트를 사용 중인 Docker 컨테이너가 종료됩니다.
+
 ## 참고
 
 도커 이미지 링크: https://hub.docker.com/r/teddylee777/langgraph-qna-agent
