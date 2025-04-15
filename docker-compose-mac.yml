@@ -26,8 +26,8 @@ services:
             retries: 5
             interval: 5s
     langgraph-api:
-        image: "teddylee777/langgraph-qna-agent:amd64"
-        platform: linux/amd64
+        image: "teddylee777/langgraph-qna-agent:latest"
+        platform: linux/arm64
         ports:
             - "7777:8000"
         depends_on:
